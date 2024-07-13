@@ -82,7 +82,7 @@ for(let i=0;i<str3.length;i++){
     }
 }
 
-if(str4){
+if(     ){
     arr2.push(str4)
 }
 
