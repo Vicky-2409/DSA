@@ -223,20 +223,24 @@ class QueueObj{
     }
 
     dequeue(){
+        if(this.isEmpty()){
+            return null; 
+        }
         let item = this.items[this.front];
-        delete this.items[this.front]
-        this.front++
-        return item
+        delete this.items[this.front];
+        this.front++;
+        return item;
     }
 
     peek(){
-        return this.items[this.front]
+        if(this.isEmpty()){
+            return null; 
+        }
+        return this.items[this.front];
     }
 
     display(){
-
-            console.log(this.items);
-
+        console.log(this.items);
     }
 
 }
@@ -244,12 +248,226 @@ class QueueObj{
 const queueObj = new QueueObj()
 
 // console.log(queueObj.isEmpty());
-queueObj.enqueue(10)
-queueObj.enqueue(20)
-queueObj.enqueue(30)
-console.log(queueObj.display());
-console.log(queueObj.dequeue());
-console.log(queueObj.peek());
-queueObj.display()
-console.log(queueObj.isEmpty());
+// queueObj.enqueue(10)
+// queueObj.enqueue(20)
+// queueObj.enqueue(30)
+// queueObj.display()
+// console.log(queueObj.dequeue());
+// console.log(queueObj.peek());
+// queueObj.display()
+// console.log(queueObj.isEmpty());
 
+
+//circular Queue
+
+class CircularQueue{
+    constructor(size){
+        this.items = new Array(size)
+        this.capacity = size;
+        this.size = 0;
+        this.front = -1;
+        this.rear = -1;
+    }
+
+    isEmpty(){
+        return this.rear - this.front === 0
+    }
+
+    isFull(){
+        return this.capacity === this.size
+    }
+
+    getSize(){
+        return this.rear - this.front;
+    }
+
+    enqueue(element){
+        if(!this.isFull()){
+            this.rear = (this.rear + 1) % this.capacity;
+            this.items[this.rear] = element;
+            this.size++
+            if(this.front === -1){
+                this.front = this.rear
+            }
+        } 
+        return null
+    }
+
+    dequeue(){
+        if(this.isEmpty()){
+            return -1
+        }
+        let item = this.items[this.front]
+        this.items[this.front] = null;
+        this.front = (this.front + 1) % this.capacity
+        this.size--
+        if(this.isEmpty()){
+            this.front = -1;
+            this.rear = -1;
+        }
+        return item
+    }
+
+    display(){
+        let i
+        let str = ''
+        for(i=this.front ; i!== this.rear; i = (i+1) % this.capacity){
+            str += this.items[i] + " "
+        }
+        str += this.items[i] + " "
+        console.log(str);
+    }
+
+    peek(){
+        return this.items[this.front]
+    }
+}
+
+const circularqueue = new CircularQueue(3)
+
+
+// console.log(circularqueue.isEmpty());
+// circularqueue.enqueue(10)
+// circularqueue.enqueue(20)
+// circularqueue.enqueue(30)
+// circularqueue.display()
+// console.log(circularqueue.isFull());
+// console.log(circularqueue.dequeue());
+// circularqueue.display()
+// circularqueue.enqueue(40)
+// circularqueue.display()
+// console.log(circularqueue.peek());
+
+
+
+
+
+//Hash Table
+
+class HashTable{
+
+    constructor(size){
+        this.table = new Array(size)
+        this.capacity = size;
+    }
+
+    hash(key){
+        let length = 0
+        for(let i=0 ; i<key.length; i++){
+            length += key.charCodeAt(i)
+        }
+        return length % this.capacity
+    }
+
+    set(key,value){
+        let index = this.hash(key);
+        this.table[index] = value
+    }
+
+    get(key){
+        let index = this.hash(key)
+        return this.table[index]
+    }
+
+    delete(key){
+        let index = this.hash(key)
+        this.table[index] = null;
+    }
+
+    display(){
+        for(let i=0; i<this.table.length; i++){
+            if(this.table[i]){
+                console.log(i, this.table[i]);
+            }
+        }
+    }
+
+}
+
+const table = new HashTable(50);
+
+// table.set('name','Logesh')
+// table.set('age',21)
+// table.display()
+// console.log(table.get('age'));
+// table.set('name','Harish')
+// table.delete('age')
+// table.display()
+
+//hash table collisions
+
+class HashTableCollision{
+    constructor(size){
+        this.table = new Array(size);
+        this.capacity = size;
+    }
+
+    hash(key){
+        let length = 0;
+        for(let i=0;i<key.length;i++){
+            length += key.charCodeAt(i)
+        }
+        return length % this.capacity
+    }
+
+    set(key,value){
+        let index = this.hash(key);
+        let bucket = this.table[index]
+        if(bucket){
+            let sameKeyItem = bucket.find(item => item[0] === key)
+            if(sameKeyItem){
+                sameKeyItem[1] = value
+            } else {
+                bucket.push([key,value])
+            }
+            
+        } else{
+            this.table[index] = [[key,value]]
+        }
+        
+    }
+
+    get(key){
+        let index = this.hash(key);
+        let bucket = this.table[index]
+        if(bucket){
+            let sameKeyItem = bucket.find(item=> item[0] === key)
+            if(sameKeyItem){
+                return sameKeyItem[1]
+            }
+        }
+        return null
+    }
+
+    delete(key){
+        let index = this.hash(key)
+        let bucket = this.table[index]
+        if(bucket){
+            let sameKeyItem = bucket.find(item => item[0] === key)
+            if(sameKeyItem){
+                bucket.splice(bucket.indexOf(sameKeyItem),1)
+            }
+        }
+        return null
+    }
+
+    display(){
+        for(let i = 0; i<this.capacity; i++){
+            if(this.table[i]){
+                console.log(i,this.table[i]);
+            }
+        }
+    }
+}
+
+const colltable = new HashTableCollision(50)
+
+colltable.set('name','logesh')
+colltable.set('age',21)
+colltable.display()
+
+console.log(colltable.get('age'));
+colltable.set('mane','harish')
+colltable.display()
+colltable.delete('name')
+colltable.display()
