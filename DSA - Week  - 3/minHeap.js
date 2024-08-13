@@ -73,5 +73,7 @@ minHeap.insert(55)
 minHeap.insert(40)
 minHeap.insert(54)
 minHeap.insert(34)
+console.log(minHeap);
+
 
 console.log(minHeap.remove());

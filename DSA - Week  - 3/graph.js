@@ -28,7 +28,7 @@ class Graph{
             this.removeEdge(adjacentVertex, vertex)
         }
         delete this.adjacencyList[vertex]
-    }
+    }           
 
     display(){
         for(let vertex in this.adjacencyList){
